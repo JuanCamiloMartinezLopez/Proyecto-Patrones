@@ -8,16 +8,23 @@ import java.util.Vector;
 import general.AllOrders;
 import general.Order;
 
-public class LiquidatedOrders implements Iterator{
+public class LiquidatedOrders implements Iterator<Order>{
 	
 	private Vector<Order> v;
 	AllOrders ao;
 	Order nextOrder;
 	Enumeration<Order> eo;
+	String type;
 	
 	public LiquidatedOrders(AllOrders inp_ao) {
 		ao=inp_ao;
 		eo=inp_ao.getAllCandidates();
+		type=null;
+	}
+	public LiquidatedOrders(AllOrders inp_ao, String inp_type) {
+		ao=inp_ao;
+		eo=inp_ao.getAllCandidates();
+		type=inp_type;
 	}
 
 	@Override
@@ -25,11 +32,20 @@ public class LiquidatedOrders implements Iterator{
 		boolean matchFound = false;
 		while (eo.hasMoreElements()) {
 			Order tempObj = (Order) eo.nextElement();
-			if (tempObj.isliquidated()) {
-				matchFound = true;
-				nextOrder = tempObj;
-				break;
+			if(type!=null) {
+				if (tempObj.isliquidated() && tempObj.getType().equals(type)) {
+					matchFound = true;
+					nextOrder = tempObj;
+					break;
+				}
+			}else {
+				if (tempObj.isliquidated()) {
+					matchFound = true;
+					nextOrder = tempObj;
+					break;
+				}
 			}
+			
 		}
 		
 		if (matchFound == true) {
@@ -41,7 +57,7 @@ public class LiquidatedOrders implements Iterator{
 	}
 
 	@Override
-	public Object next() {
+	public Order next() {
 		if (nextOrder == null) {
 			throw new NoSuchElementException();
 		} else {

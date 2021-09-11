@@ -8,20 +8,19 @@ import java.util.Vector;
 import general.AllOrders;
 import general.Order;
 
-public class NonLiquidatedOrders implements Iterator{
+public class AllOrdersIterator implements Iterator{
 	private Vector<Order> v;
 	AllOrders ao;
 	Order nextOrder;
 	Enumeration<Order> eo;
 	String type;
 	
-	public NonLiquidatedOrders(AllOrders inp_ao) {
+	public AllOrdersIterator(AllOrders inp_ao) {
 		ao=inp_ao;
 		eo=inp_ao.getAllCandidates();
 		type=null;
 	}
-	
-	public NonLiquidatedOrders(AllOrders inp_ao, String inp_type) {
+	public AllOrdersIterator(AllOrders inp_ao, String inp_type) {
 		ao=inp_ao;
 		eo=inp_ao.getAllCandidates();
 		type=inp_type;
@@ -33,13 +32,13 @@ public class NonLiquidatedOrders implements Iterator{
 		while (eo.hasMoreElements()) {
 			Order tempObj = (Order) eo.nextElement();
 			if(type!=null) {
-				if (!tempObj.isliquidated() && tempObj.getType().equals(type)) {
+				if(tempObj!=null && tempObj.getType().equals(type)) {
 					matchFound = true;
 					nextOrder = tempObj;
 					break;
 				}
 			}else {
-				if (!tempObj.isliquidated()) {
+				if(tempObj!=null) {
 					matchFound = true;
 					nextOrder = tempObj;
 					break;
@@ -56,7 +55,7 @@ public class NonLiquidatedOrders implements Iterator{
 	}
 
 	@Override
-	public Object next() {
+	public Order next() {
 		if (nextOrder == null) {
 			throw new NoSuchElementException();
 		} else {

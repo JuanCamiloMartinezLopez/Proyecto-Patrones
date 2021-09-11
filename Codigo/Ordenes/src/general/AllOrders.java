@@ -11,7 +11,7 @@ public class AllOrders {
 	}
 
 	
-	public Enumeration getAllCandidates() {
+	public Enumeration<Order> getAllCandidates() {
 		return data.elements();
 	}
 	
