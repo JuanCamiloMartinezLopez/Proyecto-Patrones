@@ -1,10 +1,28 @@
 package general;
 
-public class OverseasOrder extends Order{
+import visitador.OrderVisitor;
 
-	OverseasOrder(String nombre,boolean liquidated) {
-		super(nombre, liquidated);
-		// TODO Auto-generated constructor stub
+public class OverseasOrder extends Order{
+	private double additionalSH;
+	OverseasOrder(String inp_name,double inp_amount,double inp_additionalSH) {
+		super(inp_name, inp_amount);
+		setAdditionalSH(inp_additionalSH);
+		super.setType("OverseasOrder");
+	}
+	public double getAdditionalSH() {
+		return additionalSH;
+	}
+	public void setAdditionalSH(double additionalSH) {
+		this.additionalSH = additionalSH;
+	}
+
+	public void accept(OrderVisitor v) {
+		v.visit(this);
+	}
+	
+	@Override
+	public String toString() {
+		return "Orden "+getName()+" de tipo "+getType()+" SH adiccional: "+getAdditionalSH()+" liquidada: "+isliquidated();
 	}
 
 }
