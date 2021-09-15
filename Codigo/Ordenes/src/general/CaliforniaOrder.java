@@ -5,7 +5,7 @@ import visitador.OrderVisitor;
 public class CaliforniaOrder extends Order{
 	private double additionalTax;
 
-	CaliforniaOrder(String inp_name, double inp_amount, double inp_additionalTax) {
+	public CaliforniaOrder(String inp_name, double inp_amount, double inp_additionalTax) {
 		super(inp_name, inp_amount);
 		setAdditionalTax(inp_additionalTax);
 		super.setType("CaliforniaOrder");

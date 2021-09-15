@@ -10,7 +10,8 @@ import general.OverseasOrder;
 
 public class OrderVisitor implements VisitorInterface {
   private Vector<Order> orderObjList;
-
+  private double orderTotal;
+  
   public OrderVisitor() {
     orderObjList = new Vector<Order>();
   }
@@ -33,6 +34,8 @@ public class OrderVisitor implements VisitorInterface {
 	 inp_order.setTotalOrder(inp_order.getOrderAmount()+inp_order.getAdditionalSH()+inp_order.getAdditionalTax());
 	 inp_order.setliquidated(true);	
   }
-  
+  public double getOrderTotal(){
+	  return orderTotal;
+  }
 
 }
