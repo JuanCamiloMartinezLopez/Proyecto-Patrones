@@ -37,7 +37,7 @@ public class CubanOrder extends Order{
 
 	@Override
 	public String toString() {
-		return "Orden "+getName()+" de tipo "+getType()+" impuesto adiccional: "+getAdditionalTax()+" SH adiccional: "+getAdditionalSH()+" liquidada: "+isliquidated();
+		return "Orden "+getName()+" de tipo "+getType()+"con valor "+getOrderAmount()+" impuesto adiccional: "+getAdditionalTax()+" SH adiccional: "+getAdditionalSH()+" liquidada: "+isliquidated();
 	}
 
 }

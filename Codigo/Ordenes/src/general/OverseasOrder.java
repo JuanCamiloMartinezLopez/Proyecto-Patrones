@@ -22,7 +22,7 @@ public class OverseasOrder extends Order{
 	
 	@Override
 	public String toString() {
-		return "Orden "+getName()+" de tipo "+getType()+" SH adiccional: "+getAdditionalSH()+" liquidada: "+isliquidated();
+		return "Orden "+getName()+" de tipo "+getType()+"con valor "+getOrderAmount()+" SH adiccional: "+getAdditionalSH()+" liquidada: "+isliquidated();
 	}
 
 }

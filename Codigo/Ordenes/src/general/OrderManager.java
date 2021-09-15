@@ -191,7 +191,7 @@ public class OrderManager extends JFrame {
 
 		/////////////////////////////////////////////////////////////////////////////////////
 		
-		 AllOrders listOrders= new AllOrders(); OrderVisitor ov= new OrderVisitor();
+		 /*AllOrders listOrders= new AllOrders(); OrderVisitor ov= new OrderVisitor();
 		 listOrders.addOrder(new CaliforniaOrder("orden 1",1000, 0));
 	     listOrders.addOrder(new CaliforniaOrder("orden 1",1000, 0));
 		 listOrders.addOrder(new NonCaliforniaOrder("orden 2",1000));
@@ -220,7 +220,7 @@ public class OrderManager extends JFrame {
 		 System.out.println("todas las ordenes:"); while(aoi.hasNext()) { Order
 		 auxOrder=aoi.next(); System.out.println(auxOrder);
 		 if(auxOrder.getType().equals("CaliforniaOrder")) { auxOrder.accept(ov); } }
-
+		  */
 	}
 
 	public void setTotalValue(String msg) {
@@ -253,11 +253,13 @@ public class OrderManager extends JFrame {
 	public String getOrderAmount() {
 		return txtOrderAmount.getText();
 	}
+	
 }
 
 class ButtonHandler implements ActionListener {
 	OrderManager objOrderManager;
 	UIBuilder builder;
+	AllOrders ao;
 
 	public void actionPerformed(ActionEvent e) {
 		String totalResult = null;
@@ -266,6 +268,7 @@ class ButtonHandler implements ActionListener {
 			System.exit(1);
 		}
 		if (e.getActionCommand().equals(OrderManager.CREATE_ORDER)) {
+			
 			// get input values
 			String orderType = objOrderManager.getOrderType();
 			String orderName = objOrderManager.getOrderName();
@@ -292,24 +295,35 @@ class ButtonHandler implements ActionListener {
 			dblSH = new Double(strSH).doubleValue();
 
 			// Create the order
-			Order order = createOrder(orderType, orderName, dblOrderAmount, dblTax, dblSH);
-			System.out.println(order);
+			//Order order = createOrder(orderType, orderName, dblOrderAmount, dblTax, dblSH);
+			createOrder(orderType, orderName, dblOrderAmount, dblTax, dblSH);
+			//System.out.println(order);
 
 			// Get the Visitor
 			OrderVisitor visitor = objOrderManager.getOrderVisitor();
 
 			// accept the visitor x
-			order.accept(visitor);
+			//order.accept(visitor);
 
 			objOrderManager.setTotalValue(" Order Created Successfully");
 		}
 
 		if (e.getActionCommand().equals(OrderManager.GET_TOTAL)) {
-			// Get the Visitor
+			AllOrdersIterator aoi= new AllOrdersIterator(ao);
 			OrderVisitor visitor = objOrderManager.getOrderVisitor();
-			totalResult = new Double(visitor.getOrderTotal()).toString();
+			while(aoi.hasNext()) {
+				Order auxOrder=aoi.next(); 
+				System.out.println(auxOrder.toString());
+				auxOrder.accept(visitor); 
+				System.out.println(auxOrder.toString());
+				System.out.println("Order total:"+auxOrder.getTotalOrder());
+			}
+	
+			// Get the Visitor
+			
+			/*totalResult = new Double(visitor.getOrderTotal()).toString();
 			totalResult = " Orders Total = " + totalResult;
-			objOrderManager.setTotalValue(totalResult);
+			objOrderManager.setTotalValue(totalResult);*/
 		}
 		
 		if (e.getSource() == objOrderManager.getOrderTypeCtrl()) {      
@@ -332,20 +346,20 @@ class ButtonHandler implements ActionListener {
 	    }
 	}
 
-	public Order createOrder(String orderType, String orderName, double orderAmount, double tax, double SH) {
+	public void createOrder(String orderType, String orderName, double orderAmount, double tax, double SH) {
+		System.out.println("cuando se crea: "+orderAmount);
 		if (orderType.equalsIgnoreCase(OrderManager.CA_ORDER)) {
-			return new CaliforniaOrder(orderName, orderAmount, tax);
+			ao.addOrder(new CaliforniaOrder(orderName, orderAmount, tax)); 
 		}
 		if (orderType.equalsIgnoreCase(OrderManager.NON_CA_ORDER)) {
-			return new NonCaliforniaOrder(orderName, orderAmount);
+			ao.addOrder(new NonCaliforniaOrder(orderName, orderAmount));
 		}
 		if (orderType.equalsIgnoreCase(OrderManager.OVERSEAS_ORDER)) {
-			return new OverseasOrder(orderName, orderAmount, SH);
+			ao.addOrder(new OverseasOrder(orderName, orderAmount, SH));
 		}
 		if (orderType.equalsIgnoreCase(OrderManager.CUBAN_ORDER)) {
-			return new CubanOrder(orderName, orderAmount, tax, SH);
+			ao.addOrder(new CubanOrder(orderName, orderAmount, tax, SH));
 		}
-		return null;
 	}
 
 	public ButtonHandler() {
@@ -353,5 +367,6 @@ class ButtonHandler implements ActionListener {
 
 	public ButtonHandler(OrderManager inObjOrderManager) {
 		objOrderManager = inObjOrderManager;
+		ao= new AllOrders();
 	}
 }

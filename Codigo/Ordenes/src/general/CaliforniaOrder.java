@@ -6,7 +6,9 @@ public class CaliforniaOrder extends Order{
 	private double additionalTax;
 
 	public CaliforniaOrder(String inp_name, double inp_amount, double inp_additionalTax) {
+		
 		super(inp_name, inp_amount);
+		System.out.println("constructor "+inp_amount);
 		setAdditionalTax(inp_additionalTax);
 		super.setType("CaliforniaOrder");
 	}
@@ -26,7 +28,7 @@ public class CaliforniaOrder extends Order{
 
 	@Override
 	public String toString() {
-		return "Orden "+getName()+" de tipo "+getType()+" impuesto adiccional: "+getAdditionalTax()+" liquidada: "+isliquidated();
+		return "Orden "+getName()+" de tipo "+getType()+"con valor "+getOrderAmount()+" impuesto adiccional: "+getAdditionalTax()+" liquidada: "+isliquidated();
 	}
 
 }

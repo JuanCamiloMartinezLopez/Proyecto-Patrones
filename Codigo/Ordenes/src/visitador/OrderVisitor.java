@@ -20,8 +20,7 @@ public class OrderVisitor implements VisitorInterface {
     inp_order.setliquidated(true);
   }
   public void visit(CaliforniaOrder inp_order) {
-    inp_order.setTotalOrder(inp_order.getOrderAmount() +
-                 inp_order.getAdditionalTax());
+    inp_order.setTotalOrder(inp_order.getOrderAmount() +inp_order.getAdditionalTax());
     inp_order.setliquidated(true);
   }
   

@@ -9,9 +9,10 @@ public abstract class Order {
 	private String name;
 	private double totalOrder;
 	
-	Order(String inp_name,double amount){
+	Order(String inp_name,double inp_amount){
 		isliquidated=false;
 		name=inp_name;
+		amount= inp_amount;
 	}
 	
 	public abstract void accept(OrderVisitor v);
