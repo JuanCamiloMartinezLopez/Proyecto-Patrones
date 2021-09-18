@@ -8,8 +8,6 @@ import java.awt.event.*;
 import javax.swing.*;
 //import com.sun.java.swing.plaf.windows.*;
 
-import javax.swing.JFrame;
-
 import builder.BuilderFactory;
 import builder.UIBuilder;
 import builder.UIDirector;
@@ -28,20 +26,38 @@ public class OrderManager extends JFrame {
 	public static final String OVERSEAS_ORDER = "Overseas Order";
 	public static final String CUBAN_ORDER = "Cuban Order";
 	public static final String BLANK = "";
+	public static final String CREAR = "Create";
+	public static final String EDITAR = "Edit";
+	public static final String LISTAR = "List";
 
-	private JComboBox cmbOrderType;
-	private JPanel pOrderType;
-	private JTextField txtOrderName, txtOrderAmount;
-	private JLabel lblOrderCriteria, lblOrderType, lblOrderName, lblOrderAmount;
+	private JPanel createPanel, pOrderType, pOrderType2, createButtonPanel, editPanel, editButtonPanel, listPanel,
+			listButtonPanel;
+	private JComboBox cmbOrderType, cmbOrderList, cmbOrderType2;
+	private JTextField txtOrderName, txtOrderAmount, txtOrderName2, txtOrderAmount2;
+	private JLabel lblOrderCriteria, lblOrderCriteria2, lblOrderType, lblOrderList;
+	private JLabel lblisLiquidated, lblOrderName, lblOrderName2, lblOrderAmount, lblOrderAmount2;
 	private JLabel lblTotal, lblTotalValue;
-
 	private OrderVisitor objVisitor;
+
+	public static AllOrders listOrders;
 
 	public OrderManager() {
 		super("Ejercicio-Patrones");
 
 		// Create the visitor instance
 		objVisitor = new OrderVisitor();
+
+		ButtonHandler objButtonHandler = new ButtonHandler(this);
+
+		JTabbedPane tabPanel = new JTabbedPane();
+		createButtonPanel = new JPanel();
+		createPanel = new JPanel();
+		editPanel = new JPanel();
+		editButtonPanel = new JPanel();
+		listPanel = new JPanel();
+		listButtonPanel = new JPanel();
+
+		// **************************************************** CreatePanel
 
 		cmbOrderType = new JComboBox();
 		cmbOrderType.addItem(OrderManager.BLANK);
@@ -56,6 +72,8 @@ public class OrderManager extends JFrame {
 		txtOrderAmount = new JTextField(10);
 
 		lblOrderType = new JLabel("Order Type:");
+		lblOrderList = new JLabel("Orders:");
+		lblisLiquidated = new JLabel("Seleccione:");
 		lblOrderCriteria = new JLabel("Order Criteria");
 		lblOrderName = new JLabel("Order Name:");
 		lblOrderAmount = new JLabel("Order Amount:");
@@ -63,110 +81,213 @@ public class OrderManager extends JFrame {
 		lblTotal = new JLabel("Result:");
 		lblTotalValue = new JLabel("Click Create or GetTotal Button");
 
-		// Create the open button
+		createPanel = new JPanel();
+
+		// **************************************************** CreatePanel
+
+		tabPanel.addTab("Crear Orden", createPanel);
+
 		JButton getTotalButton = new JButton(OrderManager.GET_TOTAL);
 		getTotalButton.setMnemonic(KeyEvent.VK_G);
 		JButton createOrderButton = new JButton(OrderManager.CREATE_ORDER);
-		getTotalButton.setMnemonic(KeyEvent.VK_C);
+		createOrderButton.setMnemonic(KeyEvent.VK_C);
 		JButton exitButton = new JButton(OrderManager.EXIT);
 		exitButton.setMnemonic(KeyEvent.VK_X);
-		ButtonHandler objButtonHandler = new ButtonHandler(this);
 
-		getTotalButton.addActionListener(objButtonHandler);
-		createOrderButton.addActionListener(objButtonHandler);
-		exitButton.addActionListener(new ButtonHandler());
-		cmbOrderType.addActionListener(objButtonHandler);
+		createPanel.add(createButtonPanel);
 
-		// For layout purposes, put the buttons in a separate panel
-		JPanel buttonPanel = new JPanel();
-
-		JPanel panel = new JPanel();
 		GridBagLayout gridbag2 = new GridBagLayout();
-		panel.setLayout(gridbag2);
+		createButtonPanel.setLayout(gridbag2);
 		GridBagConstraints gbc2 = new GridBagConstraints();
 
-		panel.add(getTotalButton);
-		panel.add(createOrderButton);
-		panel.add(exitButton);
-
-		gbc2.anchor = GridBagConstraints.EAST;
+		gbc2.anchor = GridBagConstraints.CENTER;
 		gbc2.gridx = 0;
 		gbc2.gridy = 0;
 		gridbag2.setConstraints(createOrderButton, gbc2);
 		gbc2.gridx = 1;
 		gbc2.gridy = 0;
 		gridbag2.setConstraints(getTotalButton, gbc2);
-		gbc2.gridx = 2;
+		gbc2.gridx = 3;
 		gbc2.gridy = 0;
 		gridbag2.setConstraints(exitButton, gbc2);
 
-		// ****************************************************
-		GridBagLayout gridbag = new GridBagLayout();
-		buttonPanel.setLayout(gridbag);
-		GridBagConstraints gbc = new GridBagConstraints();
+		createButtonPanel.add(getTotalButton);
+		createButtonPanel.add(createOrderButton);
 
-		buttonPanel.add(lblOrderType);
-		buttonPanel.add(cmbOrderType);
-		buttonPanel.add(lblOrderCriteria);
-		buttonPanel.add(pOrderType);
-		buttonPanel.add(lblOrderName);
-		buttonPanel.add(txtOrderName);
-		buttonPanel.add(lblOrderAmount);
-		buttonPanel.add(txtOrderAmount);
-		buttonPanel.add(lblTotalValue);
-		buttonPanel.add(lblTotal);
-		
-		gbc.insets.top = 5;
-		gbc.insets.bottom = 5;
-		gbc.insets.left = 5;
-		gbc.insets.right = 5;
+		createButtonPanel.add(exitButton);
 
-		gbc.anchor = GridBagConstraints.WEST;
-		
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gridbag.setConstraints(lblOrderType, gbc);
-		gbc.gridx = 1;
-		gbc.gridy = 1;
-		gridbag.setConstraints(cmbOrderType, gbc);
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-		gridbag.setConstraints(lblOrderName, gbc);
-		gbc.gridx = 1;
-		gbc.gridy = 2;
-		gridbag.setConstraints(txtOrderName, gbc);
-		gbc.gridx = 0;
-		gbc.gridy = 3;
-		gridbag.setConstraints(lblOrderAmount, gbc);
-		gbc.gridx = 1;
-		gbc.gridy = 3;
-		gridbag.setConstraints(txtOrderAmount, gbc);
-		gbc.gridx = 0;
-		gbc.gridy = 4;
-		gridbag.setConstraints(lblOrderCriteria, gbc);
-		gbc.gridx = 1;
-		gbc.gridy = 5;
-		gridbag.setConstraints(pOrderType, gbc);
-		
-		gbc.anchor = GridBagConstraints.EAST;
-	    gbc.gridx = 0;
-	    gbc.gridy = 6;
-	    gridbag.setConstraints(lblTotal, gbc);
-	    gbc.anchor = GridBagConstraints.WEST;
-	    gbc.gridx = 1;
-	    gbc.gridy = 6;
-	    gridbag.setConstraints(lblTotalValue, gbc);
-		
-		gbc.insets.left = 2;
-		gbc.insets.right = 2;
-		gbc.insets.top = 40;
+		getTotalButton.addActionListener(objButtonHandler);
+		createOrderButton.addActionListener(objButtonHandler);
+		exitButton.addActionListener(new ButtonHandler());
+		cmbOrderType.addActionListener(objButtonHandler);
+
+		GridBagLayout gridbag1 = new GridBagLayout();
+		createPanel.setLayout(gridbag1);
+		GridBagConstraints gbc1 = new GridBagConstraints();
+
+		createPanel.add(lblOrderType);
+		createPanel.add(cmbOrderType);
+		createPanel.add(lblOrderCriteria);
+		createPanel.add(pOrderType);
+		createPanel.add(lblOrderName);
+		createPanel.add(txtOrderName);
+		createPanel.add(lblOrderAmount);
+		createPanel.add(txtOrderAmount);
+		createPanel.add(lblTotalValue);
+		createPanel.add(lblTotal);
+
+		gbc1.insets.top = 5;
+		gbc1.insets.bottom = 5;
+		gbc1.insets.left = 5;
+		gbc1.insets.right = 5;
+
+		gbc1.anchor = GridBagConstraints.NORTH;
+
+		gbc1.gridx = 0;
+		gbc1.gridy = 1;
+		gridbag1.setConstraints(lblOrderType, gbc1);
+		gbc1.gridx = 1;
+		gbc1.gridy = 1;
+		gridbag1.setConstraints(cmbOrderType, gbc1);
+		gbc1.gridx = 0;
+		gbc1.gridy = 2;
+		gridbag1.setConstraints(lblOrderName, gbc1);
+		gbc1.gridx = 1;
+		gbc1.gridy = 2;
+		gridbag1.setConstraints(txtOrderName, gbc1);
+		gbc1.gridx = 0;
+		gbc1.gridy = 3;
+		gridbag1.setConstraints(lblOrderAmount, gbc1);
+		gbc1.gridx = 1;
+		gbc1.gridy = 3;
+		gridbag1.setConstraints(txtOrderAmount, gbc1);
+		gbc1.gridx = 0;
+		gbc1.gridy = 4;
+		gridbag1.setConstraints(lblOrderCriteria, gbc1);
+		gbc1.gridx = 1;
+		gbc1.gridy = 5;
+		gridbag1.setConstraints(pOrderType, gbc1);
+
+		gbc1.anchor = GridBagConstraints.NORTH;
+		gbc1.gridx = 0;
+		gbc1.gridy = 6;
+		gridbag1.setConstraints(lblTotal, gbc1);
+		gbc1.anchor = GridBagConstraints.NORTH;
+		gbc1.gridx = 1;
+		gbc1.gridy = 6;
+		gridbag1.setConstraints(lblTotalValue, gbc1);
+		gbc1.gridx = 1;
+		gbc1.gridy = 7;
+		gridbag1.setConstraints(createButtonPanel, gbc1);
+
+		// **************************************************** EditPanel
+		pOrderType2 = new JPanel();
+
+		txtOrderName2 = new JTextField(15);
+		txtOrderAmount2 = new JTextField(10);
+
+		lblOrderCriteria2 = new JLabel("Order Criteria");
+		lblOrderName2 = new JLabel("Order Name:");
+		lblOrderAmount2 = new JLabel("Order Amount:");
+
+		tabPanel.addTab("Editar Orden", editPanel);
+
+		cmbOrderList = new JComboBox();
+		cmbOrderList.addItem(OrderManager.BLANK);
+		cmbOrderType2 = new JComboBox();
+		cmbOrderType2.addItem(OrderManager.BLANK);
+		cmbOrderType2.addItem("CaliforniaOrder");
+		cmbOrderType2.addItem("NonCaliforniaOrder");
+		cmbOrderType2.addItem("OverseasOrder");
+		cmbOrderType2.addItem("CubanOrder");
+
+		cmbOrderList.addActionListener(objButtonHandler);
+		cmbOrderType2.addActionListener(objButtonHandler);
+
+		JButton editButton = new JButton(OrderManager.EDITAR);
+		editButton.setMnemonic(KeyEvent.VK_L);
+
+		editPanel.add(editButtonPanel);
+
+		GridBagLayout gridbag4 = new GridBagLayout();
+		editButtonPanel.setLayout(gridbag4);
+		GridBagConstraints gbc4 = new GridBagConstraints();
+
+		gbc4.gridx = 0;
+		gbc4.gridy = 0;
+		gridbag2.setConstraints(editButton, gbc4);
+
+		editButtonPanel.add(editButton);
+
+		GridBagLayout gridbag3 = new GridBagLayout();
+		editPanel.setLayout(gridbag3);
+		GridBagConstraints gbc3 = new GridBagConstraints();
+
+		// createPanel.add(lblOrderType);
+		// createPanel.add(cmbOrderType);
+		editPanel.add(lblisLiquidated);
+		editPanel.add(cmbOrderType2);
+		editPanel.add(lblOrderList);
+		editPanel.add(cmbOrderList);
+		editPanel.add(lblOrderCriteria2);
+		editPanel.add(pOrderType2);
+		editPanel.add(lblOrderName2);
+		editPanel.add(txtOrderName2);
+		editPanel.add(lblOrderAmount2);
+		editPanel.add(txtOrderAmount2);
+		// createPanel.add(lblTotalValue);
+		// createPanel.add(lblTotal);
+
+		gbc3.insets.top = 5;
+		gbc3.insets.bottom = 5;
+		gbc3.insets.left = 5;
+		gbc3.insets.right = 5;
+
+		gbc3.anchor = GridBagConstraints.NORTH;
+
+		gbc3.gridx = 0;
+		gbc3.gridy = 1;
+		gridbag3.setConstraints(lblisLiquidated, gbc3);
+		gbc3.gridx = 1;
+		gbc3.gridy = 1;
+		gridbag3.setConstraints(cmbOrderType2, gbc3);
+		gbc3.gridx = 0;
+		gbc3.gridy = 2;
+		gridbag3.setConstraints(lblOrderList, gbc3);
+		gbc3.gridx = 1;
+		gbc3.gridy = 2;
+		gridbag3.setConstraints(cmbOrderList, gbc3);
+		gbc3.gridx = 0;
+		gbc3.gridy = 3;
+		gridbag3.setConstraints(lblOrderName2, gbc3);
+		gbc3.gridx = 1;
+		gbc3.gridy = 3;
+		gridbag3.setConstraints(txtOrderName2, gbc3);
+		gbc3.gridx = 0;
+		gbc3.gridy = 4;
+		gridbag3.setConstraints(lblOrderAmount2, gbc3);
+		gbc3.gridx = 1;
+		gbc3.gridy = 4;
+		gridbag3.setConstraints(txtOrderAmount2, gbc3);
+		gbc3.gridx = 0;
+		gbc3.gridy = 5;
+		gridbag3.setConstraints(lblOrderCriteria2, gbc3);
+		gbc3.gridx = 1;
+		gbc3.gridy = 6;
+		gridbag3.setConstraints(pOrderType2, gbc3);
+
+		gbc3.anchor = GridBagConstraints.NORTH;
+		gbc3.gridx = 0;
+		gbc3.gridy = 7;
+		gridbag3.setConstraints(editButtonPanel, gbc3);
+
+		// **************************************************** ListPanel
 
 		// ****************************************************
 		// Add the buttons and the log to the frame
 		Container contentPane = getContentPane();
 
-		contentPane.add(buttonPanel, BorderLayout.NORTH);
-		contentPane.add(panel, BorderLayout.CENTER);
+		contentPane.add(tabPanel, BorderLayout.WEST);
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			SwingUtilities.updateComponentTreeUI(OrderManager.this);
@@ -190,37 +311,41 @@ public class OrderManager extends JFrame {
 		frame.setVisible(true);
 
 		/////////////////////////////////////////////////////////////////////////////////////
-		
-		 /*AllOrders listOrders= new AllOrders(); OrderVisitor ov= new OrderVisitor();
-		 listOrders.addOrder(new CaliforniaOrder("orden 1",1000, 0));
-	     listOrders.addOrder(new CaliforniaOrder("orden 1",1000, 0));
-		 listOrders.addOrder(new NonCaliforniaOrder("orden 2",1000));
-		 listOrders.addOrder(new CubanOrder("orden 3",1000, 0, 0));
-		 listOrders.addOrder(new OverseasOrder("orden 4",1000, 0));
-		 listOrders.addOrder(new CaliforniaOrder("orden 5",1000, 0));
-		 listOrders.addOrder(new CaliforniaOrder("orden 6",1000, 0));
-		 listOrders.addOrder(new NonCaliforniaOrder("orden 7",1000));
-		 listOrders.addOrder(new CubanOrder("orden 8",1000, 0, 0));
-		 listOrders.addOrder(new OverseasOrder("orden 9",1000, 0));
-		 
-		 LiquidatedOrders lo=new LiquidatedOrders(listOrders,"CaliforniaOrder");
-		 NonLiquidatedOrders nlo=new
-		 NonLiquidatedOrders(listOrders,"CaliforniaOrder"); AllOrdersIterator aoi= new
-		 AllOrdersIterator(listOrders);
-		  
-		 System.out.println("todas las ordenes:"); while(aoi.hasNext()) { Order
-		 auxOrder=aoi.next(); System.out.println(auxOrder);
-		 if(auxOrder.getType().equals("CaliforniaOrder")) { auxOrder.accept(ov);
-		 auxOrder.setName("Orden liquidada"); } }
-		 System.out.println("Ordenes liquidadas:");
-		 
-		 while(lo.hasNext()) { System.out.println(lo.next()); }
-		 System.out.println("Ordenes no liquidadas:"); while(nlo.hasNext()) {
-		 System.out.println(nlo.next()); } aoi= new AllOrdersIterator(listOrders);
-		 System.out.println("todas las ordenes:"); while(aoi.hasNext()) { Order
-		 auxOrder=aoi.next(); System.out.println(auxOrder);
-		 if(auxOrder.getType().equals("CaliforniaOrder")) { auxOrder.accept(ov); } }
-		  */
+
+//		listOrders = new AllOrders();
+//		OrderVisitor ov = new OrderVisitor();
+//		listOrders.addOrder(new CaliforniaOrder("orden 1", 1000, 0));
+//		listOrders.addOrder(new CaliforniaOrder("orden 1", 1000, 0));
+//		listOrders.addOrder(new NonCaliforniaOrder("orden 2", 1000));
+//		listOrders.addOrder(new CubanOrder("orden 3", 1000, 0, 0));
+//		listOrders.addOrder(new OverseasOrder("orden 4", 1000, 0));
+//		listOrders.addOrder(new CaliforniaOrder("orden 5", 1000, 0));
+//		listOrders.addOrder(new CaliforniaOrder("orden 6", 1000, 0));
+//		listOrders.addOrder(new NonCaliforniaOrder("orden 7", 1000));
+//		listOrders.addOrder(new CubanOrder("orden 8", 1000, 0, 0));
+//		listOrders.addOrder(new OverseasOrder("orden 9", 1000, 0));
+//		
+//		LiquidatedOrders lo=new LiquidatedOrders(listOrders,"CaliforniaOrder");
+//		NonLiquidatedOrders nlo=new
+//		NonLiquidatedOrders(listOrders,"CaliforniaOrder"); AllOrdersIterator aoi= new
+//		AllOrdersIterator(listOrders);
+//		 
+//		System.out.println("todas las ordenes:"); while(aoi.hasNext()) { Order
+//		auxOrder=aoi.next(); System.out.println(auxOrder);
+//		if(auxOrder.getType().equals("CaliforniaOrder")) { auxOrder.accept(ov);
+//		auxOrder.setName("Orden liquidada"); } }
+//		System.out.println("Ordenes liquidadas:");
+//		
+//		while(lo.hasNext()) { System.out.println(lo.next()); }
+//		System.out.println("Ordenes no liquidadas:"); while(nlo.hasNext()) {
+//		System.out.println(nlo.next()); } aoi= new AllOrdersIterator(listOrders);
+//		System.out.println("todas las ordenes:"); while(aoi.hasNext()) { Order
+//		auxOrder=aoi.next(); System.out.println(auxOrder);
+//		if(auxOrder.getType().equals("CaliforniaOrder")) { auxOrder.accept(ov); } }
+	}
+
+	public AllOrders getOrderList() {
+		return listOrders;
 	}
 
 	public void setTotalValue(String msg) {
@@ -235,10 +360,26 @@ public class OrderManager extends JFrame {
 		return (String) cmbOrderType.getSelectedItem();
 	}
 
+	public String getOrderItem() {
+		return (String) cmbOrderList.getSelectedItem();
+	}
+
+	public String getOrderEditType() {
+		return (String) cmbOrderType2.getSelectedItem();
+	}
+
 	public JComboBox getOrderTypeCtrl() {
 		return cmbOrderType;
 	}
-	
+
+	public JComboBox getOrderType2Ctrl() {
+		return cmbOrderType2;
+	}
+
+	public JComboBox getOrderEditListCtrl() {
+		return cmbOrderList;
+	}
+
 	public void displayNewUI(JPanel panel) {
 		pOrderType.removeAll();
 		pOrderType.add(panel);
@@ -253,10 +394,11 @@ public class OrderManager extends JFrame {
 	public String getOrderAmount() {
 		return txtOrderAmount.getText();
 	}
-	
-}
+
+}// end of the class OrderManager
 
 class ButtonHandler implements ActionListener {
+
 	OrderManager objOrderManager;
 	UIBuilder builder;
 	AllOrders ao;
@@ -268,7 +410,7 @@ class ButtonHandler implements ActionListener {
 			System.exit(1);
 		}
 		if (e.getActionCommand().equals(OrderManager.CREATE_ORDER)) {
-			
+
 			// get input values
 			String orderType = objOrderManager.getOrderType();
 			String orderName = objOrderManager.getOrderName();
@@ -295,61 +437,108 @@ class ButtonHandler implements ActionListener {
 			dblSH = new Double(strSH).doubleValue();
 
 			// Create the order
-			//Order order = createOrder(orderType, orderName, dblOrderAmount, dblTax, dblSH);
+			// Order order = createOrder(orderType, orderName, dblOrderAmount, dblTax,
+			// dblSH);
 			createOrder(orderType, orderName, dblOrderAmount, dblTax, dblSH);
-			//System.out.println(order);
+			// System.out.println(order);
 
 			// Get the Visitor
 			OrderVisitor visitor = objOrderManager.getOrderVisitor();
 
 			// accept the visitor x
-			//order.accept(visitor);
+			// order.accept(visitor);
 
 			objOrderManager.setTotalValue(" Order Created Successfully");
 		}
 
 		if (e.getActionCommand().equals(OrderManager.GET_TOTAL)) {
-			AllOrdersIterator aoi= new AllOrdersIterator(ao);
+			AllOrdersIterator aoi = new AllOrdersIterator(ao);
 			OrderVisitor visitor = objOrderManager.getOrderVisitor();
-			while(aoi.hasNext()) {
-				Order auxOrder=aoi.next(); 
+			while (aoi.hasNext()) {
+				Order auxOrder = aoi.next();
 				System.out.println(auxOrder.toString());
-				auxOrder.accept(visitor); 
+				auxOrder.accept(visitor);
 				System.out.println(auxOrder.toString());
-				System.out.println("Order total:"+auxOrder.getTotalOrder());
+				System.out.println("Order total:" + auxOrder.getTotalOrder());
 			}
-	
+
 			// Get the Visitor
-			
-			/*totalResult = new Double(visitor.getOrderTotal()).toString();
-			totalResult = " Orders Total = " + totalResult;
-			objOrderManager.setTotalValue(totalResult);*/
+
+			/*
+			 * totalResult = new Double(visitor.getOrderTotal()).toString(); totalResult =
+			 * " Orders Total = " + totalResult; objOrderManager.setTotalValue(totalResult);
+			 */
 		}
-		
-		if (e.getSource() == objOrderManager.getOrderTypeCtrl()) {      
-	        String selection = objOrderManager.getOrderType();
 
-	      if (selection.equals("") == false) {
-	        BuilderFactory factory = new BuilderFactory();
-	        //create an appropriate builder instance
-	        builder = factory.getUIBuilder(selection);
-	        //configure the director with the builder
-	        UIDirector director = new UIDirector(builder);
-	        //director invokes different builder
-	        // methods
-	        director.build();
-	        //get the final build object
-	        JPanel UIObj = builder.getOrderUI();
-	        objOrderManager.displayNewUI(UIObj);
-	      }
+		if (e.getSource() == objOrderManager.getOrderTypeCtrl()) {
+			String selection = objOrderManager.getOrderType();
 
-	    }
+			if (selection.equals("") == false) {
+				BuilderFactory factory = new BuilderFactory();
+				// create an appropriate builder instance
+				builder = factory.getUIBuilder(selection);
+				// configure the director with the builder
+				UIDirector director = new UIDirector(builder);
+				// director invokes different builder
+				// methods
+				director.build();
+				// get the final build object
+				JPanel UIObj = builder.getOrderUI();
+				objOrderManager.displayNewUI(UIObj);
+			}
+
+		}
+
+		if (e.getSource() == objOrderManager.getOrderType2Ctrl()) {
+			String selection = objOrderManager.getOrderEditType();
+
+			if (selection.equals("") == false) {
+				objOrderManager.getOrderEditListCtrl().removeAllItems();
+				OrderVisitor ov = new OrderVisitor();
+				LiquidatedOrders lo = new LiquidatedOrders(ao, selection);
+				NonLiquidatedOrders nlo = new NonLiquidatedOrders(ao, selection);
+				AllOrdersIterator aoi = new AllOrdersIterator(ao);
+				while (aoi.hasNext()) {
+					Order auxOrder = aoi.next();
+					System.out.println(auxOrder);
+					if (auxOrder.getType().equals(selection)) {
+						auxOrder.accept(ov);
+					}
+				}
+				System.out.println("Ordenes liquidadas:");
+				while (lo.hasNext()) {
+					System.out.println(lo.next());
+				}
+				System.out.println("Ordenes no liquidadas:");
+				while (nlo.hasNext()) {
+					System.out.println(nlo.next());
+				}
+				aoi = new AllOrdersIterator(ao);
+				System.out.println("todas las ordenes:");
+				while (aoi.hasNext()) {
+					Order auxOrder = aoi.next();
+					System.out.println(auxOrder);
+					objOrderManager.getOrderEditListCtrl().addItem(auxOrder);
+					System.out.println("Listo");
+					if (auxOrder.getType().equals("CaliforniaOrder")) {
+						auxOrder.accept(ov);
+					}
+				}
+			}
+		}
+
+		if (e.getSource() == objOrderManager.getOrderTypeCtrl()) {
+
+		}
+		if (e.getActionCommand().equals(OrderManager.EDITAR)) {
+
+		}
 	}
 
 	public void createOrder(String orderType, String orderName, double orderAmount, double tax, double SH) {
-		System.out.println("cuando se crea: "+orderAmount);
+		System.out.println("cuando se crea: " + orderAmount);
 		if (orderType.equalsIgnoreCase(OrderManager.CA_ORDER)) {
-			ao.addOrder(new CaliforniaOrder(orderName, orderAmount, tax)); 
+			ao.addOrder(new CaliforniaOrder(orderName, orderAmount, tax));
 		}
 		if (orderType.equalsIgnoreCase(OrderManager.NON_CA_ORDER)) {
 			ao.addOrder(new NonCaliforniaOrder(orderName, orderAmount));
@@ -367,6 +556,6 @@ class ButtonHandler implements ActionListener {
 
 	public ButtonHandler(OrderManager inObjOrderManager) {
 		objOrderManager = inObjOrderManager;
-		ao= new AllOrders();
+		ao = new AllOrders();
 	}
 }
