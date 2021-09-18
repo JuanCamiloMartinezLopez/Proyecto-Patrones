@@ -56,7 +56,7 @@ public class NonLiquidatedOrders implements Iterator{
 	}
 
 	@Override
-	public Object next() {
+	public Order next() {
 		if (nextOrder == null) {
 			throw new NoSuchElementException();
 		} else {

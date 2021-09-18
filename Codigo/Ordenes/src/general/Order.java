@@ -33,7 +33,11 @@ public abstract class Order {
 		this.name = inp_name;
 	}
 	
-	public abstract String toString();
+	public abstract String informacion();
+	
+	public String toString() {
+		return getName();
+	}
 
 	public double getOrderAmount() {
 		return amount;

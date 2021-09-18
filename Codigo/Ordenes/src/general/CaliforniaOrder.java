@@ -27,7 +27,7 @@ public class CaliforniaOrder extends Order{
 	}
 
 	@Override
-	public String toString() {
+	public String informacion() {
 		return "Orden "+getName()+" de tipo "+getType()+"con valor "+getOrderAmount()+" impuesto adiccional: "+getAdditionalTax()+" liquidada: "+isliquidated();
 	}
 

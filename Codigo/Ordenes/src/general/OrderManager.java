@@ -6,7 +6,9 @@ import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 //import com.sun.java.swing.plaf.windows.*;
+import javax.swing.event.ChangeListener;
 
 import builder.BuilderFactory;
 import builder.UIBuilder;
@@ -37,15 +39,9 @@ public class OrderManager extends JFrame {
 	private JLabel lblOrderCriteria, lblOrderCriteria2, lblOrderType, lblOrderList;
 	private JLabel lblisLiquidated, lblOrderName, lblOrderName2, lblOrderAmount, lblOrderAmount2;
 	private JLabel lblTotal, lblTotalValue;
-	private OrderVisitor objVisitor;
-
-	public static AllOrders listOrders;
 
 	public OrderManager() {
 		super("Ejercicio-Patrones");
-
-		// Create the visitor instance
-		objVisitor = new OrderVisitor();
 
 		ButtonHandler objButtonHandler = new ButtonHandler(this);
 
@@ -206,6 +202,7 @@ public class OrderManager extends JFrame {
 
 		JButton editButton = new JButton(OrderManager.EDITAR);
 		editButton.setMnemonic(KeyEvent.VK_L);
+		editButton.addActionListener(objButtonHandler);
 
 		editPanel.add(editButtonPanel);
 
@@ -225,8 +222,8 @@ public class OrderManager extends JFrame {
 
 		// createPanel.add(lblOrderType);
 		// createPanel.add(cmbOrderType);
-		editPanel.add(lblisLiquidated);
-		editPanel.add(cmbOrderType2);
+		//editPanel.add(lblisLiquidated);
+		//editPanel.add(cmbOrderType2);
 		editPanel.add(lblOrderList);
 		editPanel.add(cmbOrderList);
 		editPanel.add(lblOrderCriteria2);
@@ -286,8 +283,17 @@ public class OrderManager extends JFrame {
 		// ****************************************************
 		// Add the buttons and the log to the frame
 		Container contentPane = getContentPane();
-
-		contentPane.add(tabPanel, BorderLayout.WEST);
+		// Detecta el cambio de pestaña
+		tabPanel.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				System.out.println("Tab: " + tabPanel.getSelectedIndex());
+				if(tabPanel.getSelectedIndex()==1) {
+					objButtonHandler.setAllOrderToEdit();
+				}
+			}
+	    });
+		contentPane.add(tabPanel, BorderLayout.CENTER);
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			SwingUtilities.updateComponentTreeUI(OrderManager.this);
@@ -343,25 +349,17 @@ public class OrderManager extends JFrame {
 //		auxOrder=aoi.next(); System.out.println(auxOrder);
 //		if(auxOrder.getType().equals("CaliforniaOrder")) { auxOrder.accept(ov); } }
 	}
-
-	public AllOrders getOrderList() {
-		return listOrders;
-	}
-
+	
 	public void setTotalValue(String msg) {
 		lblTotalValue.setText(msg);
-	}
-
-	public OrderVisitor getOrderVisitor() {
-		return objVisitor;
 	}
 
 	public String getOrderType() {
 		return (String) cmbOrderType.getSelectedItem();
 	}
 
-	public String getOrderItem() {
-		return (String) cmbOrderList.getSelectedItem();
+	public Order getOrderItem() {
+		return (Order) cmbOrderList.getSelectedItem();
 	}
 
 	public String getOrderEditType() {
@@ -394,6 +392,13 @@ public class OrderManager extends JFrame {
 	public String getOrderAmount() {
 		return txtOrderAmount.getText();
 	}
+	
+	public String getEditedOrderName() {
+		return txtOrderName2.getText();
+	}
+	public void setEditedOrderName(String newName) {
+		txtOrderName2.setText(newName);
+	}
 
 }// end of the class OrderManager
 
@@ -402,6 +407,8 @@ class ButtonHandler implements ActionListener {
 	OrderManager objOrderManager;
 	UIBuilder builder;
 	AllOrders ao;
+	
+	Controller ctrl;
 
 	public void actionPerformed(ActionEvent e) {
 		String totalResult = null;
@@ -439,11 +446,9 @@ class ButtonHandler implements ActionListener {
 			// Create the order
 			// Order order = createOrder(orderType, orderName, dblOrderAmount, dblTax,
 			// dblSH);
-			createOrder(orderType, orderName, dblOrderAmount, dblTax, dblSH);
+			ctrl.createOrder(orderType, orderName, dblOrderAmount, dblTax, dblSH);
 			// System.out.println(order);
 
-			// Get the Visitor
-			OrderVisitor visitor = objOrderManager.getOrderVisitor();
 
 			// accept the visitor x
 			// order.accept(visitor);
@@ -452,15 +457,6 @@ class ButtonHandler implements ActionListener {
 		}
 
 		if (e.getActionCommand().equals(OrderManager.GET_TOTAL)) {
-			AllOrdersIterator aoi = new AllOrdersIterator(ao);
-			OrderVisitor visitor = objOrderManager.getOrderVisitor();
-			while (aoi.hasNext()) {
-				Order auxOrder = aoi.next();
-				System.out.println(auxOrder.toString());
-				auxOrder.accept(visitor);
-				System.out.println(auxOrder.toString());
-				System.out.println("Order total:" + auxOrder.getTotalOrder());
-			}
 
 			// Get the Visitor
 
@@ -489,7 +485,7 @@ class ButtonHandler implements ActionListener {
 
 		}
 
-		if (e.getSource() == objOrderManager.getOrderType2Ctrl()) {
+		if (e.getSource() == objOrderManager.getOrderTypeCtrl()) {
 			String selection = objOrderManager.getOrderEditType();
 
 			if (selection.equals("") == false) {
@@ -513,41 +509,39 @@ class ButtonHandler implements ActionListener {
 				while (nlo.hasNext()) {
 					System.out.println(nlo.next());
 				}
-				aoi = new AllOrdersIterator(ao);
-				System.out.println("todas las ordenes:");
-				while (aoi.hasNext()) {
-					Order auxOrder = aoi.next();
-					System.out.println(auxOrder);
-					objOrderManager.getOrderEditListCtrl().addItem(auxOrder);
-					System.out.println("Listo");
-					if (auxOrder.getType().equals("CaliforniaOrder")) {
-						auxOrder.accept(ov);
-					}
-				}
+				
 			}
 		}
 
-		if (e.getSource() == objOrderManager.getOrderTypeCtrl()) {
-
+		if (e.getSource() == objOrderManager.getOrderEditListCtrl()) {
+			try {
+				
+				if(objOrderManager.getOrderEditListCtrl().getItemCount()>0) {
+					Order o= (Order) objOrderManager.getOrderEditListCtrl().getSelectedItem();
+					System.out.println(o.informacion());
+					objOrderManager.setEditedOrderName(o.getName());
+				}
+			}catch(Exception ex) {
+				System.out.println(ex);
+			}
+			
 		}
 		if (e.getActionCommand().equals(OrderManager.EDITAR)) {
-
+			Order o= (Order) objOrderManager.getOrderEditListCtrl().getSelectedItem();
+			o.setName(objOrderManager.getEditedOrderName());
+			ctrl.printAllOrder();
+			setAllOrderToEdit();
 		}
 	}
-
-	public void createOrder(String orderType, String orderName, double orderAmount, double tax, double SH) {
-		System.out.println("cuando se crea: " + orderAmount);
-		if (orderType.equalsIgnoreCase(OrderManager.CA_ORDER)) {
-			ao.addOrder(new CaliforniaOrder(orderName, orderAmount, tax));
-		}
-		if (orderType.equalsIgnoreCase(OrderManager.NON_CA_ORDER)) {
-			ao.addOrder(new NonCaliforniaOrder(orderName, orderAmount));
-		}
-		if (orderType.equalsIgnoreCase(OrderManager.OVERSEAS_ORDER)) {
-			ao.addOrder(new OverseasOrder(orderName, orderAmount, SH));
-		}
-		if (orderType.equalsIgnoreCase(OrderManager.CUBAN_ORDER)) {
-			ao.addOrder(new CubanOrder(orderName, orderAmount, tax, SH));
+	
+	public void setAllOrderToEdit() {
+		objOrderManager.getOrderEditListCtrl().removeAllItems();
+		//objOrderManager.getOrderEditListCtrl().addItem(OrderManager.BLANK);
+		for (Order order:ctrl.getAllOrders(null)) {
+			objOrderManager.getOrderEditListCtrl().addItem(order);
+			/*if (auxOrder.getType().equals("CaliforniaOrder")) {
+				auxOrder.accept(ov);
+			}*/
 		}
 	}
 
@@ -557,5 +551,6 @@ class ButtonHandler implements ActionListener {
 	public ButtonHandler(OrderManager inObjOrderManager) {
 		objOrderManager = inObjOrderManager;
 		ao = new AllOrders();
+		ctrl= new Controller();
 	}
 }

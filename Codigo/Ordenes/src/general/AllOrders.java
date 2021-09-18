@@ -18,4 +18,8 @@ public class AllOrders {
 	public void addOrder( Order o) {
 		data.add(o);
 	}
+	
+	public void replaceOrder(Order oldOrder, Order newOrder) {
+		data.set(data.indexOf(oldOrder), newOrder);
+	}
 }
