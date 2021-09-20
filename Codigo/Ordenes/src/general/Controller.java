@@ -110,11 +110,11 @@ public class Controller {
 		}
 		String orderInfomation="";
 		for(Order order:FilteredOrders) {
-			orderInfomation=orderInfomation+order.informacion()+"/n";
+			orderInfomation=orderInfomation+order.informacion()+"\n";
 			//System.out.println(order.informacion());
 		}
 		if(state=="Liquidated") {
-			orderInfomation+="/n/n Total amount liquidated Orders:"+getTotalAmountLiquidatedOrders(type);
+			orderInfomation+="\n\n Total amount liquidated Orders:"+getTotalAmountLiquidatedOrders(type);
 		}
 		return orderInfomation;
 	}
