@@ -76,7 +76,7 @@ public class OrderManager extends JFrame {
 		lblOrderCriteria = new JLabel("Order Criteria");
 		lblOrderName = new JLabel("Order Name:");
 		lblOrderAmount = new JLabel("Order Amount:");
-		lblTotalValue = new JLabel("Click Create Button");
+		lblTotalValue = new JLabel("Select the type of Order to create");
 
 		JButton createOrderButton = new JButton(OrderManager.CREATE_ORDER);
 		createOrderButton.setMnemonic(KeyEvent.VK_C);
@@ -270,6 +270,7 @@ public class OrderManager extends JFrame {
 		
 		cmbOrderType4 = new JComboBox();
 		cmbOrderType4.addItem(OrderManager.BLANK);
+		cmbOrderType4.addItem("All");
 		cmbOrderType4.addItem("CaliforniaOrder");
 		cmbOrderType4.addItem("NonCaliforniaOrder");
 		cmbOrderType4.addItem("OverseasOrder");
@@ -335,6 +336,7 @@ public class OrderManager extends JFrame {
 		
 		cmbOrderType3 = new JComboBox();
 		cmbOrderType3.addItem(OrderManager.BLANK);
+		cmbOrderType3.addItem("All");
 		cmbOrderType3.addItem("CaliforniaOrder");
 		cmbOrderType3.addItem("NonCaliforniaOrder");
 		cmbOrderType3.addItem("OverseasOrder");
@@ -342,18 +344,19 @@ public class OrderManager extends JFrame {
 		
 		cmbIsLiq = new JComboBox();
 		cmbIsLiq.addItem(OrderManager.BLANK);
+		cmbIsLiq.addItem("All");
 		cmbIsLiq.addItem("Liquidated");
 		cmbIsLiq.addItem("NonLiquidated");
 		
 		cmbOrderType3.addActionListener(objButtonHandler);
 		cmbIsLiq.addActionListener(objButtonHandler);
 		
-		JButton listOrdersButton = new JButton(OrderManager.LISTAR);
+		/*JButton listOrdersButton = new JButton(OrderManager.LISTAR);
 		listOrdersButton.setMnemonic(KeyEvent.VK_L);
 		listOrdersButton.addActionListener(objButtonHandler);
 		JButton listAllOrdButton = new JButton(OrderManager.LISTALL);
 		listAllOrdButton.setMnemonic(KeyEvent.VK_Y);
-		listAllOrdButton.addActionListener(objButtonHandler);
+		listAllOrdButton.addActionListener(objButtonHandler);*/
 		
 		listPanel.add(listButtonPanel);
 		
@@ -363,13 +366,13 @@ public class OrderManager extends JFrame {
 		
 		gbc8.gridx = 0;
 		gbc8.gridy = 0;
-		gridbag8.setConstraints(listOrdersButton, gbc8);
+		//gridbag8.setConstraints(listOrdersButton, gbc8);
 		gbc8.gridx = 1;
 		gbc8.gridy = 0;
-		gridbag8.setConstraints(listAllOrdButton, gbc8);
+		//gridbag8.setConstraints(listAllOrdButton, gbc8);
 		
-		listButtonPanel.add(listOrdersButton);
-		listButtonPanel.add(listAllOrdButton);
+		//listButtonPanel.add(listOrdersButton);
+		//listButtonPanel.add(listAllOrdButton);
 		
 		GridBagLayout gridbag7 = new GridBagLayout();
 		listPanel.setLayout(gridbag7);
@@ -408,7 +411,7 @@ public class OrderManager extends JFrame {
 		// ****************************************************
 		// Add the buttons and the log to the frame
 		Container contentPane = getContentPane();
-		// Detecta el cambio de pestaña
+		// Detecta el cambio de pestaï¿½a
 		tabPanel.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
@@ -440,40 +443,6 @@ public class OrderManager extends JFrame {
 		// frame.pack();
 		frame.setSize(1000, 400);
 		frame.setVisible(true);
-
-		/////////////////////////////////////////////////////////////////////////////////////
-
-//		listOrders = new AllOrders();
-//		OrderVisitor ov = new OrderVisitor();
-//		listOrders.addOrder(new CaliforniaOrder("orden 1", 1000, 0));
-//		listOrders.addOrder(new CaliforniaOrder("orden 1", 1000, 0));
-//		listOrders.addOrder(new NonCaliforniaOrder("orden 2", 1000));
-//		listOrders.addOrder(new CubanOrder("orden 3", 1000, 0, 0));
-//		listOrders.addOrder(new OverseasOrder("orden 4", 1000, 0));
-//		listOrders.addOrder(new CaliforniaOrder("orden 5", 1000, 0));
-//		listOrders.addOrder(new CaliforniaOrder("orden 6", 1000, 0));
-//		listOrders.addOrder(new NonCaliforniaOrder("orden 7", 1000));
-//		listOrders.addOrder(new CubanOrder("orden 8", 1000, 0, 0));
-//		listOrders.addOrder(new OverseasOrder("orden 9", 1000, 0));
-//		
-//		LiquidatedOrders lo=new LiquidatedOrders(listOrders,"CaliforniaOrder");
-//		NonLiquidatedOrders nlo=new
-//		NonLiquidatedOrders(listOrders,"CaliforniaOrder"); AllOrdersIterator aoi= new
-//		AllOrdersIterator(listOrders);
-//		 
-//		System.out.println("todas las ordenes:"); while(aoi.hasNext()) { Order
-//		auxOrder=aoi.next(); System.out.println(auxOrder);
-//		if(auxOrder.getType().equals("CaliforniaOrder")) { auxOrder.accept(ov);
-//		auxOrder.setName("Orden liquidada"); } }
-//		System.out.println("Ordenes liquidadas:");
-//		
-//		while(lo.hasNext()) { System.out.println(lo.next()); }
-//		System.out.println("Ordenes no liquidadas:"); 
-//		while(nlo.hasNext()) {
-//			System.out.println(nlo.next()); } aoi= new AllOrdersIterator(listOrders);
-//		System.out.println("todas las ordenes:"); while(aoi.hasNext()) { Order
-//		auxOrder=aoi.next(); System.out.println(auxOrder);
-//		if(auxOrder.getType().equals("CaliforniaOrder")) { auxOrder.accept(ov); } }
 	}
 	
 	public void setTotalValue(String msg) {
@@ -596,16 +565,6 @@ class ButtonHandler implements ActionListener {
 			objOrderManager.setTotalValue(" Order Created Successfully");
 		}
 
-		if (e.getActionCommand().equals(OrderManager.GET_TOTAL)) {
-
-			// Get the Visitor
-
-			/*
-			 * totalResult = new Double(visitor.getOrderTotal()).toString(); totalResult =
-			 * " Orders Total = " + totalResult; objOrderManager.setTotalValue(totalResult);
-			 */
-		}
-
 		if (e.getSource() == objOrderManager.getOrderTypeCtrl()) {
 			String selection = objOrderManager.getOrderType();
 
@@ -621,6 +580,7 @@ class ButtonHandler implements ActionListener {
 				// get the final build object
 				JPanel UIObj = builder.getOrderUI();
 				objOrderManager.displayNewUI(UIObj);
+				objOrderManager.setTotalValue("Click Create button");
 			}
 
 		}
@@ -686,21 +646,32 @@ class ButtonHandler implements ActionListener {
 			
 		}
 		if (e.getSource() == objOrderManager.getOrderType4Ctrl()) {
-			objOrderManager.setNonLiqtxt(ctrl.informationFilteredOrders(objOrderManager.getOrderType4Ctrl().getSelectedItem().toString(), "NonLiquidated"));
+			String type=objOrderManager.getOrderType4Ctrl().getSelectedItem().toString();
+			if(type=="All")type=null;
+			objOrderManager.setNonLiqtxt(ctrl.informationFilteredOrders(type, "NonLiquidated"));
 		}
 		if (e.getActionCommand().equals(OrderManager.LIQUIDAR)) {
 			ctrl.liquidateOrders(objOrderManager.getOrderType4Ctrl().getSelectedItem().toString());
+			objOrderManager.setNonLiqtxt("Ordenes liquidadas");
 		}
-		if (e.getActionCommand().equals(OrderManager.LISTAR)) {
+		if (e.getSource() == objOrderManager.getOrderType3Ctrl() || e.getSource() == objOrderManager.getIsLiqCtrl()) {
+			String type=objOrderManager.getOrderType3Ctrl().getSelectedItem().toString();
+			String state= objOrderManager.getIsLiqCtrl().getSelectedItem().toString();
+			if(type=="All")type=null;
+			if(state=="All")state=null;
+			if(state!="" || type!="")objOrderManager.setTxtListOrders(ctrl.informationFilteredOrders(type,state));
+			
+		}
+		/*if (e.getActionCommand().equals(OrderManager.LISTAR)) {
 			if (objOrderManager.getIsLiqCtrl().getSelectedItem()=="Liquidated") {
-				objOrderManager.setTxtListOrders(ctrl.informationFilteredOrders(objOrderManager.getOrderType3Ctrl().getSelectedItem().toString(), "Liquidated"));
+				
 			} else if (objOrderManager.getIsLiqCtrl().getSelectedItem()=="NonLiquidated") {
 				objOrderManager.setTxtListOrders(ctrl.informationFilteredOrders(objOrderManager.getOrderType3Ctrl().getSelectedItem().toString(), "NonLiquidated"));
 			}
 		}
 		if (e.getActionCommand().equals(OrderManager.LISTALL)) {
 			objOrderManager.setTxtListOrders(ctrl.informationFilteredOrders(null, null));
-		}
+		}*/
 	}
 	
 	public void setAllOrderToEdit() {

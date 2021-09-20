@@ -16,7 +16,14 @@ public class NonCaliforniaOrder extends Order{
 
 	@Override
 	public String informacion() {
-		return "Orden "+getName()+" de tipo "+getType()+"con valor "+getOrderAmount()+" liquidada: "+isliquidated();
+		String informacion="";
+		informacion+="Orden ("+getName()+") de tipo "+getType()+" con valor "+getOrderAmount();
+		if(isliquidated()) {
+			informacion+=", liquidada con valor total "+getTotalOrder();
+		}else {
+			informacion+=", no liquidada";
+		}
+		return informacion;
 	}
 
 }

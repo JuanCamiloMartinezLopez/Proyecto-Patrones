@@ -109,12 +109,17 @@ public class Controller {
 			FilteredOrders=getAllOrders(type);
 		}
 		String orderInfomation="";
-		for(Order order:FilteredOrders) {
-			orderInfomation=orderInfomation+order.informacion()+"\n";
-			//System.out.println(order.informacion());
-		}
-		if(state=="Liquidated") {
-			orderInfomation+="\n\n Total amount liquidated Orders:"+getTotalAmountLiquidatedOrders(type);
+		if(FilteredOrders.size()>0) {
+			for(Order order:FilteredOrders) {
+				orderInfomation+=order.informacion()+"\n";
+				orderInfomation+="--------------------------------------\n";
+				//System.out.println(order.informacion());
+			}
+			if(state=="Liquidated") {
+				orderInfomation+="\n\n Monto Total Ordenes liquidadas:"+getTotalAmountLiquidatedOrders(type);
+			}
+		}else {
+			orderInfomation+="\n\n No hay ordenes que cumplan los filtros de busqueda.";
 		}
 		return orderInfomation;
 	}
