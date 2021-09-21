@@ -6,7 +6,7 @@ public class NonCaliforniaOrder extends Order{
 
 	NonCaliforniaOrder(String inp_name, double inp_amount) {
 		super(inp_name, inp_amount);
-		super.setType("NonCaliforniaOrder");
+		super.setType(OrderManager.NON_CA_ORDER);
 	}
 
 	public void accept(OrderVisitor v) {

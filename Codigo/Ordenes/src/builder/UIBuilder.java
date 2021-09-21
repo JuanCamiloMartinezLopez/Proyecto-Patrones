@@ -11,6 +11,8 @@ public abstract class UIBuilder {
     public abstract void initialize();
     public abstract String getAdditionalTax();
     public abstract String getAdditionalSH();
+    public abstract void setAddittionalTax(String s);
+    public abstract void setAdditionalSH(String s);
     
     public JPanel getOrderUI() {
     	return orderUI;

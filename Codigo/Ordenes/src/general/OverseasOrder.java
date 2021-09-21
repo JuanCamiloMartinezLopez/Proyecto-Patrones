@@ -7,7 +7,7 @@ public class OverseasOrder extends Order{
 	OverseasOrder(String inp_name,double inp_amount,double inp_additionalSH) {
 		super(inp_name, inp_amount);
 		setAdditionalSH(inp_additionalSH);
-		super.setType("OverseasOrder");
+		super.setType(OrderManager.OVERSEAS_ORDER);
 	}
 	public double getAdditionalSH() {
 		return additionalSH;

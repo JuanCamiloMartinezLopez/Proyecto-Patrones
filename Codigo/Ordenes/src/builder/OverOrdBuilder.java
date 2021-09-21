@@ -48,4 +48,16 @@ public class OverOrdBuilder extends UIBuilder {
 	public String getAdditionalSH() {
 		return txtAdditionalSH.getText();
 	}
+
+	@Override
+	public void setAddittionalTax(String s) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setAdditionalSH(String s) {
+		// TODO Auto-generated method stub
+		txtAdditionalSH.setText(s);
+	}
 }

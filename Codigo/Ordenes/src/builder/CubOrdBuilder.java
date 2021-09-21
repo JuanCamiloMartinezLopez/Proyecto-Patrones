@@ -59,4 +59,16 @@ public class CubOrdBuilder extends UIBuilder {
 	public String getAdditionalSH() {
 		return txtAdditionalSH.getText();
 	}
+
+	@Override
+	public void setAddittionalTax(String s) {
+		// TODO Auto-generated method stub
+		txtAdditionalTax.setText(s);
+	}
+
+	@Override
+	public void setAdditionalSH(String s) {
+		// TODO Auto-generated method stub
+		txtAdditionalSH.setText(s);
+	}
 }

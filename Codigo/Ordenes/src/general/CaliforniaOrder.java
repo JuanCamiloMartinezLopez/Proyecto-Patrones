@@ -10,7 +10,7 @@ public class CaliforniaOrder extends Order{
 		super(inp_name, inp_amount);
 		System.out.println("constructor "+inp_amount);
 		setAdditionalTax(inp_additionalTax);
-		super.setType("CaliforniaOrder");
+		super.setType(OrderManager.CA_ORDER);
 	}
 
 	public double getAdditionalTax() {

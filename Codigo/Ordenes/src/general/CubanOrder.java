@@ -10,7 +10,7 @@ public class CubanOrder extends Order{
 		super(inp_name, inp_amount);
 		setAdditionalTax(inp_additionalTax);
 		setAdditionalSH(inp_additionalSH);
-		super.setType("CubanOrder");
+		super.setType(OrderManager.CUBAN_ORDER);
 	}
 
 	public double getAdditionalSH() {

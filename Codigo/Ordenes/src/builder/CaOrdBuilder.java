@@ -47,5 +47,16 @@ public class CaOrdBuilder extends UIBuilder{
 	public String getAdditionalSH() {
 		return "";
 	}
-	
+
+	@Override
+	public void setAddittionalTax(String tax) {
+		// TODO Auto-generated method stub
+		txtAdditionalTax.setText(tax);
+	}
+
+	@Override
+	public void setAdditionalSH(String s) {
+		// TODO Auto-generated method stub
+		
+	}
 }

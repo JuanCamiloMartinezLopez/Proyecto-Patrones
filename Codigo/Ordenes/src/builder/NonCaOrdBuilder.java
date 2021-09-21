@@ -25,4 +25,15 @@ public class NonCaOrdBuilder extends UIBuilder {
 	public String getAdditionalSH() {
 		return "";
 	}
+
+	@Override
+	public void setAddittionalTax(String s) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setAdditionalSH(String s) {
+		// TODO Auto-generated method stub
+		
+	}
 }
