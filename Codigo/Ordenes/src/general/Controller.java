@@ -32,6 +32,24 @@ public class Controller {
 		}
 	}
 	
+	public Order createOneOrder(String orderType, String orderName, double orderAmount, double tax, double SH) {
+		System.out.println("cuando se crea: " + orderAmount);
+		Order order = null;
+		if (orderType.equalsIgnoreCase(OrderManager.CA_ORDER)) {
+			order = new CaliforniaOrder(orderName, orderAmount, tax);
+		}
+		if (orderType.equalsIgnoreCase(OrderManager.NON_CA_ORDER)) {
+			order = new NonCaliforniaOrder(orderName, orderAmount);
+		}
+		if (orderType.equalsIgnoreCase(OrderManager.OVERSEAS_ORDER)) {
+			order = new OverseasOrder(orderName, orderAmount, SH);
+		}
+		if (orderType.equalsIgnoreCase(OrderManager.CUBAN_ORDER)) {
+			order = new CubanOrder(orderName, orderAmount, tax, SH);
+		}
+		return order;
+	}
+	
 	public Vector<Order> getAllOrders(String order_type) {
 		Vector<Order> orders= new Vector<Order>();
 		AllOrdersIterator aoi;

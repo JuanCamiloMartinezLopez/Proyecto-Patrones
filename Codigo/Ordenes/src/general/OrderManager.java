@@ -37,8 +37,8 @@ public class OrderManager extends JFrame {
 
 	private JPanel createPanel, pOrderType, pOrderType2, createButtonPanel, editPanel, editButtonPanel;
 	private JPanel liquidatePanel, liquidateButtonPanel, listPanel, listButtonPanel;
-	private JComboBox cmbOrderType, cmbOrderList, cmbOrderType2;
-	private JComboBox cmbOrderType4, cmbOrderType3, cmbIsLiq, cmbOrderTypeEdit;
+	private JComboBox cmbOrderTypeCreate, cmbOrderList, cmbOrderTypeEdit;
+	private JComboBox cmbOrderType4, cmbOrderType3, cmbIsLiq;
 	private JTextArea txtNonLiqOrders, txtListOrders;
 	private JTextField txtOrderName, txtOrderAmount, txtOrderName2, txtOrderAmount2;
 	private JLabel lblOrderCriteria, lblOrderCriteria2, lblOrderType, lblOrderList;
@@ -59,12 +59,12 @@ public class OrderManager extends JFrame {
 
 		tabPanel.addTab("Create Order", createPanel);
 
-		cmbOrderType = new JComboBox();
-		cmbOrderType.addItem(OrderManager.BLANK);
-		cmbOrderType.addItem(OrderManager.CA_ORDER);
-		cmbOrderType.addItem(OrderManager.NON_CA_ORDER);
-		cmbOrderType.addItem(OrderManager.OVERSEAS_ORDER);
-		cmbOrderType.addItem(OrderManager.CUBAN_ORDER);
+		cmbOrderTypeCreate = new JComboBox();
+		cmbOrderTypeCreate.addItem(OrderManager.BLANK);
+		cmbOrderTypeCreate.addItem(OrderManager.CA_ORDER);
+		cmbOrderTypeCreate.addItem(OrderManager.NON_CA_ORDER);
+		cmbOrderTypeCreate.addItem(OrderManager.OVERSEAS_ORDER);
+		cmbOrderTypeCreate.addItem(OrderManager.CUBAN_ORDER);
 
 		pOrderType = new JPanel();
 
@@ -104,14 +104,14 @@ public class OrderManager extends JFrame {
 
 		createOrderButton.addActionListener(objButtonHandler);
 		exitButton.addActionListener(new ButtonHandler());
-		cmbOrderType.addActionListener(objButtonHandler);
+		cmbOrderTypeCreate.addActionListener(objButtonHandler);
 
 		GridBagLayout gridbag1 = new GridBagLayout();
 		createPanel.setLayout(gridbag1);
 		GridBagConstraints gbc1 = new GridBagConstraints();
 
 		createPanel.add(lblOrderType);
-		createPanel.add(cmbOrderType);
+		createPanel.add(cmbOrderTypeCreate);
 		createPanel.add(lblOrderCriteria);
 		createPanel.add(pOrderType);
 		createPanel.add(lblOrderName);
@@ -132,7 +132,7 @@ public class OrderManager extends JFrame {
 		gridbag1.setConstraints(lblOrderType, gbc1);
 		gbc1.gridx = 1;
 		gbc1.gridy = 1;
-		gridbag1.setConstraints(cmbOrderType, gbc1);
+		gridbag1.setConstraints(cmbOrderTypeCreate, gbc1);
 		gbc1.gridx = 0;
 		gbc1.gridy = 2;
 		gridbag1.setConstraints(lblOrderName, gbc1);
@@ -183,17 +183,10 @@ public class OrderManager extends JFrame {
 		cmbOrderList = new JComboBox();
 		cmbOrderList.addItem(OrderManager.BLANK);
 		
-		cmbOrderType2 = new JComboBox();
-		cmbOrderType2.addItem(OrderManager.BLANK);
-		cmbOrderType2.addItem(OrderManager.CA_ORDER);
-		cmbOrderType2.addItem(OrderManager.NON_CA_ORDER);
-		cmbOrderType2.addItem(OrderManager.OVERSEAS_ORDER);
-		cmbOrderType2.addItem(OrderManager.CUBAN_ORDER);
 
 		cmbOrderTypeEdit.addActionListener(objButtonHandler);
 
 		cmbOrderList.addActionListener(objButtonHandler);
-		cmbOrderType2.addActionListener(objButtonHandler);
 
 		JButton editButton = new JButton(OrderManager.EDITAR);
 		editButton.setMnemonic(KeyEvent.VK_L);
@@ -220,7 +213,7 @@ public class OrderManager extends JFrame {
 		// editPanel.add(lblisLiquidated);
 		editPanel.add(lblOrderList);
 		editPanel.add(cmbOrderList);
-		editPanel.add(cmbOrderType2);
+		editPanel.add(cmbOrderTypeEdit);
 		editPanel.add(lblOrderCriteria2);
 		editPanel.add(pOrderType2);
 		editPanel.add(lblOrderName2);
@@ -245,7 +238,7 @@ public class OrderManager extends JFrame {
 		gridbag3.setConstraints(lblOrderList, gbc3);
 		gbc3.gridx = 1;
 		gbc3.gridy = 2;
-		gridbag3.setConstraints(cmbOrderType2, gbc3);
+		gridbag3.setConstraints(cmbOrderTypeEdit, gbc3);
 		gbc3.gridx = 1;
 		gbc3.gridy = 1;
 		gridbag3.setConstraints(cmbOrderList, gbc3);
@@ -463,8 +456,8 @@ public class OrderManager extends JFrame {
 		lblTotalValue.setText(msg);
 	}
 
-	public String getOrderType() {
-		return (String) cmbOrderType.getSelectedItem();
+	public String getSelectcmbOrderTypeCreate() {
+		return (String) cmbOrderTypeCreate.getSelectedItem();
 	}
 
 	public Order getOrderItem() {
@@ -472,18 +465,18 @@ public class OrderManager extends JFrame {
 	}
 
 	public String getOrderEditType() {
-		return (String) cmbOrderType2.getSelectedItem();
+		return (String) cmbOrderTypeEdit.getSelectedItem();
 	}
 	public void setCmbOrderType2(String item) {
-		cmbOrderType2.setSelectedItem(item);
+		cmbOrderTypeEdit.setSelectedItem(item);
 	}
 
-	public JComboBox getOrderTypeCtrl() {
-		return cmbOrderType;
+	public JComboBox getcmbOrderTypeCreate() {
+		return cmbOrderTypeCreate;
 	}
 
 	public JComboBox getOrderType2Ctrl() {
-		return cmbOrderType2;
+		return cmbOrderTypeEdit;
 	}
 
 	public JComboBox getOrderType4Ctrl() {
@@ -527,6 +520,11 @@ public class OrderManager extends JFrame {
 	public String getEditedOrderName() {
 		return txtOrderName2.getText();
 	}
+	
+	
+	public String getEditedOrderAmount() {
+		return txtOrderAmount2.getText();
+	}
 
 	public void setNonLiqtxt(String tipo) {
 		txtNonLiqOrders.setText(tipo);
@@ -543,6 +541,8 @@ public class OrderManager extends JFrame {
 
 }// end of the class OrderManager
 
+
+//Clase manejadora de eventos
 class ButtonHandler implements ActionListener {
 
 	OrderManager objOrderManager;
@@ -555,13 +555,16 @@ class ButtonHandler implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String totalResult = null;
 
+		//Evento de salir
 		if (e.getActionCommand().equals(OrderManager.EXIT)) {
+			System.out.println("---Exit---");
 			System.exit(1);
 		}
+		//Evento de crear orden
 		if (e.getActionCommand().equals(OrderManager.CREATE_ORDER)) {
 
 			// get input values
-			String orderType = objOrderManager.getOrderType();
+			String orderType = objOrderManager.getSelectcmbOrderTypeCreate();
 			String orderName = objOrderManager.getOrderName();
 			String strOrderAmount = objOrderManager.getOrderAmount();
 			String strTax = builder.getAdditionalTax();
@@ -596,9 +599,10 @@ class ButtonHandler implements ActionListener {
 
 			objOrderManager.setTotalValue(" Order Created Successfully");
 		}
-
-		if (e.getSource() == objOrderManager.getOrderTypeCtrl()) {
-			String selection = objOrderManager.getOrderType();
+		
+		//Evento del combobox del tipo panel de creacion, genera el formulario de cada orden
+		if (e.getSource() == objOrderManager.getcmbOrderTypeCreate()) {
+			String selection = objOrderManager.getSelectcmbOrderTypeCreate();
 
 			if (selection.equals("") == false) {
 				BuilderFactory factory = new BuilderFactory();
@@ -616,35 +620,28 @@ class ButtonHandler implements ActionListener {
 			}
 
 		}
-
-		if (e.getSource() == objOrderManager.getOrderTypeCtrl()) {
-			String selection = objOrderManager.getOrderEditType();
-
-			if (selection.equals("") == false) {
-				objOrderManager.getOrderEditListCtrl().removeAllItems();
-				OrderVisitor ov = new OrderVisitor();
-				LiquidatedOrders lo = new LiquidatedOrders(ao, selection);
-				NonLiquidatedOrders nlo = new NonLiquidatedOrders(ao, selection);
-				AllOrdersIterator aoi = new AllOrdersIterator(ao);
-				while (aoi.hasNext()) {
-					Order auxOrder = aoi.next();
-					System.out.println(auxOrder);
-					if (auxOrder.getType().equals(selection)) {
-						auxOrder.accept(ov);
-					}
-				}
-				System.out.println("Ordenes liquidadas:");
-				while (lo.hasNext()) {
-					System.out.println(lo.next());
-				}
-				System.out.println("Ordenes no liquidadas:");
-				while (nlo.hasNext()) {
-					System.out.println(nlo.next());
-				}
-
-			}
+		if (e.getSource() == objOrderManager.getcmbOrderTypeCreate()) {
+			
+			/*
+			 * String selection = objOrderManager.getOrderEditType();
+			 * 
+			 * if (selection.equals("") == false) {
+			 * objOrderManager.getOrderEditListCtrl().removeAllItems(); OrderVisitor ov =
+			 * new OrderVisitor(); LiquidatedOrders lo = new LiquidatedOrders(ao,
+			 * selection); NonLiquidatedOrders nlo = new NonLiquidatedOrders(ao, selection);
+			 * AllOrdersIterator aoi = new AllOrdersIterator(ao); while (aoi.hasNext()) {
+			 * Order auxOrder = aoi.next(); System.out.println(auxOrder); if
+			 * (auxOrder.getType().equals(selection)) { auxOrder.accept(ov); } }
+			 * System.out.println("Ordenes liquidadas:"); while (lo.hasNext()) {
+			 * System.out.println(lo.next()); }
+			 * System.out.println("Ordenes no liquidadas:"); while (nlo.hasNext()) {
+			 * System.out.println(nlo.next()); }
+			 * 
+			 * }
+			 */
 		}
 
+		//Evento del combobox del tipo panel de edicion, genera el formulario de cada orden
 		if (e.getSource() == objOrderManager.getOrderType2Ctrl()) {
 			try {
 
@@ -670,6 +667,8 @@ class ButtonHandler implements ActionListener {
 				System.out.println(ex);
 			}
 		}
+		
+		//Evento del combobox de las ordenes panel de edicion, recupera las ordenes que se pueden editar
 		if (e.getSource() == objOrderManager.getOrderEditListCtrl()) {
 			try {
 
@@ -696,21 +695,57 @@ class ButtonHandler implements ActionListener {
 			}
 
 		}
+		
+		//Evento del boton de editar
 		if (e.getActionCommand().equals(OrderManager.EDITAR)) {
-			Order o = (Order) objOrderManager.getOrderEditListCtrl().getSelectedItem();
-			o.setName(objOrderManager.getEditedOrderName());
-			ctrl.printAllOrder();
-//			setAllOrderToEdit();
+			
+			String orderType = objOrderManager.getOrderEditType();
+			String orderName = objOrderManager.getEditedOrderName();
+			String strOrderAmount = objOrderManager.getEditedOrderAmount();
+			String strTax = builder.getAdditionalTax();
+			String strSH = builder.getAdditionalSH();
+
+			double dblOrderAmount = 0.0;
+			double dblTax = 0.0;
+			double dblSH = 0.0;
+
+			if (strOrderAmount.trim().length() == 0) {
+				strOrderAmount = "0.0";
+			}
+			if (strTax.trim().length() == 0) {
+				strTax = "0.0";
+			}
+			if (strSH.trim().length() == 0) {
+				strSH = "0.0";
+			}
+
+			dblOrderAmount = new Double(strOrderAmount).doubleValue();
+			dblTax = new Double(strTax).doubleValue();
+			dblSH = new Double(strSH).doubleValue();
+			ctrl.editOrder((Order) objOrderManager.getOrderEditListCtrl().getSelectedItem(),ctrl.createOneOrder(orderType, orderName, dblOrderAmount, dblTax, dblSH));
+			setAllOrderToEdit();
 		}
+		
 		if (e.getSource() == objOrderManager.getOrderType4Ctrl()) {
 			String type = objOrderManager.getOrderType4Ctrl().getSelectedItem().toString();
-			if (type == OrderManager.ALL)
-				type = null;
-			objOrderManager.setNonLiqtxt(ctrl.informationFilteredOrders(type, "NonLiquidated"));
+			if(type!="") {
+				if (type == OrderManager.ALL)
+					type = null;
+				objOrderManager.setNonLiqtxt(ctrl.informationFilteredOrders(type, "NonLiquidated"));
+			}
 		}
+		
 		if (e.getActionCommand().equals(OrderManager.LIQUIDAR)) {
-			ctrl.liquidateOrders(objOrderManager.getOrderType4Ctrl().getSelectedItem().toString());
-			objOrderManager.setNonLiqtxt("Ordenes liquidadas");
+			String type = objOrderManager.getOrderType4Ctrl().getSelectedItem().toString();
+			if(type!="") {
+				if (type == OrderManager.ALL)
+					type = null;
+				ctrl.liquidateOrders(type);
+				objOrderManager.setNonLiqtxt("Ordenes liquidadas");
+			}else {
+				objOrderManager.setNonLiqtxt("Seleccione un tipo de orden");
+			}
+			
 		}
 		if (e.getSource() == objOrderManager.getOrderType3Ctrl() || e.getSource() == objOrderManager.getIsLiqCtrl()) {
 			String type = objOrderManager.getOrderType3Ctrl().getSelectedItem().toString();
@@ -719,8 +754,12 @@ class ButtonHandler implements ActionListener {
 				type = null;
 			if (state == OrderManager.ALL)
 				state = null;
-			if (state != "" || type != "")
+			if (state != "" && type != "") {
 				objOrderManager.setTxtListOrders(ctrl.informationFilteredOrders(type, state));
+			}else {
+				objOrderManager.setTxtListOrders("Seleccione un tipo y estado de orden");
+			}
+				
 
 		}
 		/*
