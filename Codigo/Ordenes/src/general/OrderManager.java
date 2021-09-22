@@ -1,22 +1,11 @@
 package general;
 
-import java.util.*;
-import java.io.*;
-import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 //import com.sun.java.swing.plaf.windows.*;
 import javax.swing.event.ChangeListener;
-
-import builder.BuilderFactory;
-import builder.UIBuilder;
-import builder.UIDirector;
-import iterador.AllOrdersIterator;
-import iterador.LiquidatedOrders;
-import iterador.NonLiquidatedOrders;
-import visitador.OrderVisitor;
 
 public class OrderManager extends JFrame {
 	public static final String newline = "\n";
@@ -546,14 +535,12 @@ public class OrderManager extends JFrame {
 class ButtonHandler implements ActionListener {
 
 	OrderManager objOrderManager;
-	UIBuilder builder;
 	AllOrders ao;
 	String type, editedName, editedAmount;
 
 	Controller ctrl;
 
 	public void actionPerformed(ActionEvent e) {
-		String totalResult = null;
 
 		//Evento de salir
 		if (e.getActionCommand().equals(OrderManager.EXIT)) {
@@ -567,8 +554,8 @@ class ButtonHandler implements ActionListener {
 			String orderType = objOrderManager.getSelectcmbOrderTypeCreate();
 			String orderName = objOrderManager.getOrderName();
 			String strOrderAmount = objOrderManager.getOrderAmount();
-			String strTax = builder.getAdditionalTax();
-			String strSH = builder.getAdditionalSH();
+			String strTax = ctrl.getAdditionalTax();
+			String strSH = ctrl.getAdditionalSH();
 
 			double dblOrderAmount = 0.0;
 			double dblTax = 0.0;
@@ -584,9 +571,9 @@ class ButtonHandler implements ActionListener {
 				strSH = "0.0";
 			}
 
-			dblOrderAmount = new Double(strOrderAmount).doubleValue();
-			dblTax = new Double(strTax).doubleValue();
-			dblSH = new Double(strSH).doubleValue();
+			dblOrderAmount = Double.valueOf(strOrderAmount);
+			dblTax = Double.valueOf(strTax);
+			dblSH = Double.valueOf(strSH);
 
 			// Create the order
 			// Order order = createOrder(orderType, orderName, dblOrderAmount, dblTax,
@@ -604,41 +591,11 @@ class ButtonHandler implements ActionListener {
 		if (e.getSource() == objOrderManager.getcmbOrderTypeCreate()) {
 			String selection = objOrderManager.getSelectcmbOrderTypeCreate();
 
-			if (selection.equals("") == false) {
-				BuilderFactory factory = new BuilderFactory();
-				// create an appropriate builder instance
-				builder = factory.getUIBuilder(selection);
-				// configure the director with the builder
-				UIDirector director = new UIDirector(builder);
-				// director invokes different builder
-				// methods
-				director.build();
-				// get the final build object
-				JPanel UIObj = builder.getOrderUI();
-				objOrderManager.displayNewUI(UIObj);
+			if (!selection.equals("")) {
+				objOrderManager.displayNewUI(ctrl.getPanelAdditionalCriteria(selection));
 				objOrderManager.setTotalValue("Click Create button");
 			}
 
-		}
-		if (e.getSource() == objOrderManager.getcmbOrderTypeCreate()) {
-			
-			/*
-			 * String selection = objOrderManager.getOrderEditType();
-			 * 
-			 * if (selection.equals("") == false) {
-			 * objOrderManager.getOrderEditListCtrl().removeAllItems(); OrderVisitor ov =
-			 * new OrderVisitor(); LiquidatedOrders lo = new LiquidatedOrders(ao,
-			 * selection); NonLiquidatedOrders nlo = new NonLiquidatedOrders(ao, selection);
-			 * AllOrdersIterator aoi = new AllOrdersIterator(ao); while (aoi.hasNext()) {
-			 * Order auxOrder = aoi.next(); System.out.println(auxOrder); if
-			 * (auxOrder.getType().equals(selection)) { auxOrder.accept(ov); } }
-			 * System.out.println("Ordenes liquidadas:"); while (lo.hasNext()) {
-			 * System.out.println(lo.next()); }
-			 * System.out.println("Ordenes no liquidadas:"); while (nlo.hasNext()) {
-			 * System.out.println(nlo.next()); }
-			 * 
-			 * }
-			 */
 		}
 
 		//Evento del combobox del tipo panel de edicion, genera el formulario de cada orden
@@ -649,18 +606,7 @@ class ButtonHandler implements ActionListener {
 					Order o = (Order) objOrderManager.getOrderEditListCtrl().getSelectedItem();
 					System.out.println(o.informacion());
 					objOrderManager.setEditedOrderName(o.getName(), o.getOrderAmount());
-
-					BuilderFactory factory = new BuilderFactory();
-					// create an appropriate builder instance
-					builder = factory.getUIBuilder(objOrderManager.getOrderType2Ctrl().getSelectedItem().toString());
-					// configure the director with the builder
-					UIDirector director = new UIDirector(builder);
-					// director invokes different builder
-					// methods
-					director.build();
-					// get the final build object
-					JPanel UIObj = builder.getOrderUI();
-					objOrderManager.displayNewEditUI(UIObj);
+					objOrderManager.displayNewEditUI(ctrl.getPanelAdditionalCriteria(objOrderManager.getOrderType2Ctrl().getSelectedItem().toString()));
 					
 				}
 			} catch (Exception ex) {
@@ -680,14 +626,14 @@ class ButtonHandler implements ActionListener {
 					
 					if (o.getType().equals(OrderManager.CA_ORDER)) {
 						CaliforniaOrder cal = (CaliforniaOrder) o;
-						builder.setAddittionalTax(String.valueOf(cal.getAdditionalTax()));
+						ctrl.setAddittionalTax(String.valueOf(cal.getAdditionalTax()));
 					} else if (o.getType().equals(OrderManager.OVERSEAS_ORDER)) {
 						OverseasOrder over = (OverseasOrder) o;
-						builder.setAdditionalSH(String.valueOf(over.getAdditionalSH()));
+						ctrl.setAdditionalSH(String.valueOf(over.getAdditionalSH()));
 					} else if (o.getType().equals(OrderManager.CUBAN_ORDER)) {
 						CubanOrder cub = (CubanOrder) o;
-						builder.setAdditionalSH(String.valueOf(cub.getAdditionalSH()));
-						builder.setAddittionalTax(String.valueOf(cub.getAdditionalTax()));
+						ctrl.setAdditionalSH(String.valueOf(cub.getAdditionalSH()));
+						ctrl.setAddittionalTax(String.valueOf(cub.getAdditionalTax()));
 					}
 				}
 			} catch (Exception ex) {
@@ -702,8 +648,8 @@ class ButtonHandler implements ActionListener {
 			String orderType = objOrderManager.getOrderEditType();
 			String orderName = objOrderManager.getEditedOrderName();
 			String strOrderAmount = objOrderManager.getEditedOrderAmount();
-			String strTax = builder.getAdditionalTax();
-			String strSH = builder.getAdditionalSH();
+			String strTax = ctrl.getAdditionalTax();
+			String strSH = ctrl.getAdditionalSH();
 
 			double dblOrderAmount = 0.0;
 			double dblTax = 0.0;
@@ -719,9 +665,9 @@ class ButtonHandler implements ActionListener {
 				strSH = "0.0";
 			}
 
-			dblOrderAmount = new Double(strOrderAmount).doubleValue();
-			dblTax = new Double(strTax).doubleValue();
-			dblSH = new Double(strSH).doubleValue();
+			dblOrderAmount = Double.valueOf(strOrderAmount);
+			dblTax = Double.valueOf(strTax);
+			dblSH = Double.valueOf(strSH);
 			ctrl.editOrder((Order) objOrderManager.getOrderEditListCtrl().getSelectedItem(),ctrl.createOneOrder(orderType, orderName, dblOrderAmount, dblTax, dblSH));
 			setAllOrderToEdit();
 		}
@@ -762,17 +708,6 @@ class ButtonHandler implements ActionListener {
 				
 
 		}
-		/*
-		 * if (e.getActionCommand().equals(OrderManager.LISTAR)) { if
-		 * (objOrderManager.getIsLiqCtrl().getSelectedItem()=="Liquidated") {
-		 * 
-		 * } else if (objOrderManager.getIsLiqCtrl().getSelectedItem()=="NonLiquidated")
-		 * { objOrderManager.setTxtListOrders(ctrl.informationFilteredOrders(
-		 * objOrderManager.getOrderType3Ctrl().getSelectedItem().toString(),
-		 * "NonLiquidated")); } } if (e.getActionCommand().equals(OrderManager.LISTALL))
-		 * { objOrderManager.setTxtListOrders(ctrl.informationFilteredOrders(null,
-		 * null)); }
-		 */
 	}
 
 	public void setAllOrderToEdit() {
