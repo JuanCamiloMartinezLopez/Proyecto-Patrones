@@ -547,7 +547,6 @@ class ButtonHandler implements ActionListener {
 
 	OrderManager objOrderManager;
 	UIBuilder builder;
-	AllOrders ao;
 	String type, editedName, editedAmount;
 
 	Controller ctrl;
@@ -791,7 +790,6 @@ class ButtonHandler implements ActionListener {
 
 	public ButtonHandler(OrderManager inObjOrderManager) {
 		objOrderManager = inObjOrderManager;
-		ao = new AllOrders();
 		ctrl = new Controller();
 	}
 }
