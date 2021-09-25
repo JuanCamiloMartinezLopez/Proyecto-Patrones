@@ -2,6 +2,11 @@ package general;
 
 import java.util.Vector;
 
+import javax.swing.JPanel;
+
+import builder.BuilderFactory;
+import builder.UIBuilder;
+import builder.UIDirector;
 import iterador.AllOrdersIterator;
 import iterador.LiquidatedOrders;
 import iterador.NonLiquidatedOrders;
@@ -10,10 +15,14 @@ import visitador.OrderVisitor;
 public class Controller {
 	private AllOrders ao;
 	private OrderVisitor ov;
+	private UIBuilder builder;
+	private UIDirector director;
+	private BuilderFactory builderFactory;
 
 	public Controller() {
 		ao= new AllOrders();
 		ov= new OrderVisitor();
+		builderFactory= new BuilderFactory();
 	}
 	
 	public void createOrder(String orderType, String orderName, double orderAmount, double tax, double SH) {
@@ -142,6 +151,17 @@ public class Controller {
 		return orderInfomation;
 	}
 	
+	public JPanel getPanelAdditionalCriteria(String type_order) {
+		builder = builderFactory.getUIBuilder(type_order);
+		// configure the director with the builder
+		UIDirector director = new UIDirector(builder);
+		// director invokes different builder
+		// methods
+		director.build();
+		// get the final build object
+		return builder.getOrderUI();
+	}
+	
 	public String getTotalAmountLiquidatedOrders(String type) {
 		double totalAmount=0;
 		for(Order order:getLiquidatedOrders(type)) {
@@ -162,6 +182,22 @@ public class Controller {
 
 	private OrderVisitor getOrderVisitor() {
 		return ov;
+	}
+	
+	public String getAdditionalTax() {
+		return builder.getAdditionalTax();
+	}
+	
+	public String getAdditionalSH() {
+		return builder.getAdditionalSH();
+	}
+	
+	public void setAddittionalTax(String tax) {
+		builder.setAddittionalTax(tax);
+	}
+	
+	public void setAdditionalSH(String sh) {
+		builder.setAdditionalSH(sh);
 	}
 
 }
